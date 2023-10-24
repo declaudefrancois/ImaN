@@ -22,5 +22,7 @@ def loadConfigFromEnvFile():
         **dotenv_values(".env"),
         **os.environ,
     }
+    if 'PORT' not in config:
+        config['PORT'] = 3000
 
     return config

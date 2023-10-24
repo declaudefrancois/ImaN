@@ -31,16 +31,11 @@ jobs:
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
 
-      - name: Install dependancies
+      - name: Install dependancies, run lint & tests.
         run: |
           cd api
           python3 -m pip install --upgrade pip
           python3 -m venv .venv && source .venv/bin/activate
           pip install -r requirements.txt
-
-      - name: Check codestyle
-        run: cd api && pycodestyle *.py **/*.py **/**/*.py
-
-      - name: Run tests.
-        run: |
-             cd api && pytest
+          pycodestyle *.py **/*.py **/**/*.py
+          pytest
