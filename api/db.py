@@ -39,7 +39,7 @@ def init_db_connection(uri, db_name):
     if mongo_client is not None:
         return
     print(">>>> connecting to {} in database {}".format(uri, db_name))
-    mongo_client = MongoClient(uri)
+    mongo_client = MongoClient("{}".format(uri))
     db = mongo_client[db_name]
     print(">>>> connection successfully established")
 

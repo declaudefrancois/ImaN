@@ -12,6 +12,8 @@ def app():
     os.environ["JWT_SECRET"] = 'secret'
     os.environ["MONGO_DBNAME"] = 'iman_test'
     os.environ["MONGO_URI"] = 'mongodb://localhost:27017'
+    os.environ["CELERY_BROKER_URL"] = 'redis://localhost'
+    os.environ["CELERY_BACKEND_URL"] = 'mongodb://localhost:27017'
 
     app = init_app()
     app.config.update({
