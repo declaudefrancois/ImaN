@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Configuration module.
 """
-from dotenv import dotenv_values
+from dotenv import dotenv_values, load_dotenv
 import os
 from pydantic import BaseModel
 
@@ -18,6 +18,8 @@ class ConfigSchema(BaseModel):
 def loadConfigFromEnvFile():
     """Loads the Configuration from .env file.
     """
+    load_dotenv()
+
     config = {
         **dotenv_values(".env"),
         **os.environ,
