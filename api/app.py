@@ -3,10 +3,12 @@
 """
 from config import ConfigSchema, loadConfigFromEnvFile
 from db import init_db_connection
+from celery_app.app import celery_init_app
 from flask import Flask, make_response, jsonify
 from flask_cors import CORS
 from pydantic import ValidationError
 from v1.auth import get_auth_bp
+from v1.images import get_images_bp
 from werkzeug.exceptions import HTTPException
 
 
@@ -26,6 +28,10 @@ def init_app():
 
     # Register app routes.
     app.register_blueprint(get_auth_bp(db))
+    app.register_blueprint(get_images_bp(db))
+
+    # Add the celery extension.
+    celery_init_app(app)
 
     @app.route('/api/v1/status', methods=['GET'])
     def login():

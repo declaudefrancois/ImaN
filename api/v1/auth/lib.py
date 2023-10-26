@@ -54,16 +54,16 @@ def auth_required(func):
         if token is None:
             return jsonify({'status': 'unauthorized',
                             'message': 'Missing credentials'}), 401
-
         try:
             jwt_token = token.split('Bearer ')[1]
-            payload = jwt.decode(jwt_token, os.getenv('JWT_SECRET'))
+            payload = jwt.decode(jwt_token,
+                                 os.getenv('JWT_SECRET'),
+                                 algorithms=["HS256"])
             user_id = payload.get('sub')
-
-            return func(user_id, *args, **kwargs)
-        except Exception:
+        except Exception as e:
             return jsonify({'status': 'unauthorized',
                             'message': 'Invalid credentials'}), 401
+        return func(user_id, *args, **kwargs)
     return wrapper_auth_required
 
 
@@ -79,11 +79,13 @@ def auth_silent(func):
 
         try:
             jwt_token = token.split('Bearer ')[1]
-            payload = jwt.decode(jwt_token, os.getenv('JWT_SECRET'))
+            payload = jwt.decode(jwt_token,
+                                 os.getenv('JWT_SECRET'),
+                                 algorithms=["HS256"])
             user_id = payload.get('sub')
 
             return func(user_id, *args, **kwargs)
-        except Exception:
+        except Exception as e:
             return func(None, *args, *kwargs)
     return wrapper_auth_silent
 
@@ -100,6 +102,6 @@ def create_token(user_id):
     """
     payload = {'sub': user_id,
                'exp': datetime.utcnow() + timedelta(hours=24)}
-    token = jwt.encode(payload, os.getenv('JWT_SECRET'))
+    token = jwt.encode(payload, os.getenv('JWT_SECRET'), algorithm="HS256")
 
     return token
